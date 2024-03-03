@@ -50,9 +50,6 @@ const Sidebar = ({ sidebar }) => {
                 <div className="subscribed-list">
                     <h3>Subscribed</h3>
                     <div className="side-link">
-                        <img src={jack} alt="" /> <p>Jack</p>
-                    </div>
-                    <div className="side-link">
                         <img src={simon} alt="" /> <p>Simon</p>
                     </div>
                     <div className="side-link">
