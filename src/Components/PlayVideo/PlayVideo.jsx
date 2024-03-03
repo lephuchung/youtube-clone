@@ -5,7 +5,6 @@ import like from '../../assets/like.png';
 import dislike from '../../assets/dislike.png';
 import share from '../../assets/share.png';
 import save from '../../assets/save.png';
-import jack from '../../assets/jack.png';
 import user_profile from '../../assets/user_profile.jpg';
 import { API_KEY, value_converter } from "../../data";
 import moment from "moment";
@@ -14,15 +13,21 @@ const PlayVideo = ({ videoId }) => {
 
     const [apiData, setApiData] = useState(null);
     const [channelData, setChannelData] = useState(null);
+    const [commentData, setCommentData] = useState([]);
 
     const fetchVideoData = async () => {
         const videoDetails_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`
         await fetch(videoDetails_url).then(res => res.json()).then(data => setApiData(data.items[0]));
     }
 
-    const fetchChannelData = async () => {
+    const fetchOtherData = async () => {
+        //channel
         const channelDetails_url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${apiData.snippet.channelId}&key=${API_KEY}`
         await fetch(channelDetails_url).then(res => res.json()).then(data => setChannelData(data.items[0]));
+
+        // comment
+        const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=70&videoId=${videoId}&key=${API_KEY}`
+        await fetch(comment_url).then(res => res.json()).then(data => setCommentData(data.items));
     }
 
     useEffect(() => {
@@ -30,7 +35,7 @@ const PlayVideo = ({ videoId }) => {
     }, [])
 
     useEffect(() => {
-        fetchChannelData();
+        fetchOtherData();
     }, [apiData])
 
 
@@ -61,110 +66,24 @@ const PlayVideo = ({ videoId }) => {
                 <p>{apiData ? apiData.snippet.description : "This is description"}</p>
                 <hr />
                 <h4>{apiData ? value_converter(apiData.statistics.commentCount) : "?"} Comments</h4>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
+                {commentData.map((item, index) => {
+                    return (
+                        <div className="comment" key={index}>
+                            <img src={item.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="" />
+                            <div>
+                                <h3>{item.snippet.topLevelComment.snippet.authorDisplayName}<span>{moment(item.snippet.topLevelComment.snippet.publishedAt).fromNow()}</span></h3>
+                                <p> {item.snippet.topLevelComment.snippet.textDisplay}</p>
+                                <div className="comment-action">
+                                    <img src={like} alt="" />
+                                    <span>{value_converter(item.snippet.topLevelComment.snippet.likeCount)}</span>
+                                    <img src={dislike} alt="" />
+                                    <span></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Lê Phúc Hưng <span>1 day ago</span></h3>
-                        <p> Hello world hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe hehehe</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>123</span>
-                            <img src={dislike} alt="" />
-                            <span>2</span>
-                        </div>
-                    </div>
-                </div>
+                    )
+                })}
+
             </div>
         </div>
     )
