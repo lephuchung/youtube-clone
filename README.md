@@ -9,3 +9,6 @@ Currently, two official plugins are available:
 
 # Source
 I learned how to do this project in GreatStack Channel
+
+# Run 
+npm run dev
